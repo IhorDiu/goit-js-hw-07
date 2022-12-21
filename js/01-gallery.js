@@ -42,30 +42,34 @@ galleryContainer.addEventListener('click', onGalleryClick);
 function onGalleryClick(event) {
     event.preventDefault();
     const isImageSwatch = event.target.classList.contains('gallery__image');
+    if (!isImageSwatch) { return };
+    const getLargeImg = event.target.dataset.source;
+        
     // if (event.target.nodeName !== 'IMG') {
     //    return
     //    }
-    if (!isImageSwatch) { return };
-    
-    const getLargeImg = event.target.dataset.source;
-    // const getLargeImg = event.target.getAttribute('data-source')
+    //     const getLargeImg = event.target.getAttribute('data-source')
 
    const instance = basicLightbox.create(`
-    <img width="1280" src="${getLargeImg}">
-    `);
+    <img width="1280" src="${getLargeImg}">`,
+    {
+    onShow: instance => {document.addEventListener('keydown', onEscKeyPress)},      
+    onClose: instance => {document.removeEventListener('keydown', onEscKeyPress)},
+    });
 
     instance.show();
-
-    galleryContainer.addEventListener('keydown', event=> {
+    
+    function onEscKeyPress(event) {
+        console.log("event", event)
         if (event.code === "Escape") {
-        instance.close()
+            instance.close()
         }
-    });
-};
-
+    };    
+ };
 
 
 // Розбір документації
+
 
 // 1 Підключення
 // 2 Ініціалізація екземпляру класу (обов'язково дивитись приклади в докі)
